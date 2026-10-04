@@ -2,7 +2,7 @@
 
 A private, good-looking chat app for you and your friends. Native Android (Kotlin + Jetpack Compose),
 Firebase **Spark (free) plan**, Cloudinary for media, a tiny Cloudflare Worker for push notifications,
-and LiveKit for voice/video calls.
+and LiveKit for voice/video calls. **100% Kotlin** — the app, the Worker (Kotlin/JS) and the security-rules tests.
 
 > ⚠️ **Privacy note:** messages are stored in Firebase and media on Cloudinary. Both encrypt data in transit
 > and at rest, but Nook is **not end-to-end encrypted** — whoever administers those accounts could read it.
@@ -29,8 +29,8 @@ and LiveKit for voice/video calls.
 
 ```
 app/          Android app (single module). See CLAUDE.md for architecture & conventions.
-firebase/     Firestore + Realtime Database security rules, indexes, and rules unit tests.
-worker/       Cloudflare Worker (TypeScript): push, call ringing, LiveKit tokens, Cloudinary cleanup.
+firebase/     Firestore + Realtime Database security rules, indexes, and Kotlin rules tests (own Gradle build).
+worker/       Cloudflare Worker in Kotlin/JS (own Gradle build): push, call ringing, LiveKit tokens, Cloudinary cleanup.
 CLAUDE.md     Architecture, folder structure, design tokens, animation rules, coding conventions.
 ```
 
@@ -42,7 +42,8 @@ You'll create five free accounts. Nothing secret is committed — every key goes
 
 ### 0. Prerequisites
 - Android Studio (latest stable) with Android SDK 36, JDK 17+.
-- Node.js 20+ (for the Worker and the rules tests). Java 21 for the Firebase emulators (rules tests only).
+- Node.js 20+ — only to run the `firebase` and `wrangler` command-line tools via `npx` (no JavaScript lives in this repo).
+  Java 21 for the Firebase emulators (rules tests only).
 
 ### 1. Firebase (Spark plan — no billing card needed)
 1. Go to <https://console.firebase.google.com> → **Add project** (you can disable Google Analytics).
@@ -53,12 +54,10 @@ You'll create five free accounts. Nothing secret is committed — every key goes
 5. **Build → Realtime Database → Create database** → locked mode → same region if possible.
 6. **Project settings → Your apps → download `google-services.json`** (download it *after* steps 3–5 so it
    contains the OAuth client and the database URL) and put it at **`app/google-services.json`**.
-7. Deploy the security rules and indexes:
+7. Deploy the security rules and indexes (from the repo root):
    ```bash
-   cd firebase
-   npm install
-   npx firebase login
-   npm run deploy:rules -- --project YOUR_FIREBASE_PROJECT_ID
+   npx firebase-tools login
+   npx firebase-tools deploy --only firestore:rules,firestore:indexes,database --project YOUR_FIREBASE_PROJECT_ID
    ```
 8. For the Worker you'll need a **service account key**: Project settings → **Service accounts** →
    **Generate new private key**. Keep that JSON file somewhere safe and **never commit it**.
@@ -87,11 +86,12 @@ You'll create five free accounts. Nothing secret is committed — every key goes
    and the **API key / secret** → Worker secrets.
 
 ### 5. Cloudflare Worker (push notifications, call ringing, LiveKit tokens, media cleanup)
+The Worker is written in Kotlin and compiled to JavaScript by Kotlin/JS; wrangler uploads the compiled file.
 1. Sign up at <https://dash.cloudflare.com> (free plan).
-2. Deploy:
+2. Build it and log in:
    ```bash
+   ./gradlew -p worker bundle          # → worker/build/worker/nook-worker.mjs
    cd worker
-   npm install
    npx wrangler login
    ```
 3. Edit `worker/wrangler.toml` `[vars]`: set `FIREBASE_PROJECT_ID` and `CLOUDINARY_CLOUD_NAME` (not secret).
@@ -102,9 +102,11 @@ You'll create five free accounts. Nothing secret is committed — every key goes
    npx wrangler secret put CLOUDINARY_API_SECRET
    npx wrangler secret put LIVEKIT_API_KEY
    npx wrangler secret put LIVEKIT_API_SECRET
-   npm run deploy
+   npx wrangler deploy
    ```
+   (Re-run `./gradlew -p worker bundle` before every `npx wrangler deploy`.)
 5. Copy the printed URL (`https://nook-worker.<you>.workers.dev`) → `NOOK_WORKER_URL`.
+   Check it: opening that URL in a browser should show `{"ok":true,"service":"nook-worker"}`.
    A cron trigger (every 30 min) deletes expired disappearing messages and their media.
 
 ### 6. App keys → `local.properties`
@@ -121,7 +123,7 @@ GOOGLE_WEB_CLIENT_ID=1234567890-xxxx.apps.googleusercontent.com
 | Key | Where it comes from | Used for |
 |---|---|---|
 | `app/google-services.json` | Firebase console | Auth, Firestore, RTDB, FCM |
-| `NOOK_WORKER_URL` | `npm run deploy` in `worker/` | push, call ringing, LiveKit tokens, media delete |
+| `NOOK_WORKER_URL` | `npx wrangler deploy` in `worker/` | push, call ringing, LiveKit tokens, media delete |
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_UPLOAD_PRESET` | Cloudinary | uploads |
 | `GIPHY_API_KEY` | Giphy | GIF / sticker search |
 | `LIVEKIT_URL` | LiveKit | calls |
@@ -149,9 +151,10 @@ so it imports as-is:
 
 ## Tests
 ```bash
-./gradlew testDebugUnitTest lint            # Android unit tests (lock state machine, hashing, SetPasswordViewModel, rules/models)
-cd firebase && npm test                     # 22 security-rules tests on the Firestore + RTDB emulators
-cd worker && npm run typecheck && npm test  # Worker unit tests
+./gradlew testDebugUnitTest lint     # Android unit tests (lock state machine, hashing, SetPasswordViewModel, rules/models)
+./gradlew -p worker jvmTest          # Worker logic tests (run on the JVM, no Node needed)
+# 22 security-rules tests, run inside the Firestore + Realtime Database emulators (needs Java 21):
+npx firebase-tools emulators:exec --only firestore,database --project demo-nook "./gradlew -p firebase test"
 ```
 
 ## Spark plan budget (≈ 6 friends)
@@ -190,7 +193,7 @@ Assumptions: ~900 messages/day across the group (≈150 each), a couple of group
 ## Troubleshooting
 - **Google sign-in fails / "no credentials"**: the SHA-1 isn't registered in Firebase, or `google-services.json` was
   downloaded before enabling Google sign-in. Re-download it.
-- **"The query requires an index"**: run `npm run deploy:rules` in `firebase/` (it deploys `firestore.indexes.json`).
+- **"The query requires an index"**: re-run the `firebase-tools deploy` command from setup step 1.7 (it deploys `firestore.indexes.json`).
 - **No notifications**: check `NOOK_WORKER_URL`, the Worker secrets, notification permission, and that the device is online.
 - **Incoming calls don't go full-screen on Android 14+**: Account → Notifications → Full-screen calls.
 

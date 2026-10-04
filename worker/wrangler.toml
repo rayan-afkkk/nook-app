@@ -1,5 +1,5 @@
 name = "nook-worker"
-main = "src/index.ts"
+main = "build/worker/nook-worker.mjs"
 compatibility_date = "2025-09-01"
 
 # Every 30 minutes: delete expired disappearing messages (and their Cloudinary media).

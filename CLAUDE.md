@@ -41,8 +41,9 @@ app/src/main/java/com/nook/app/
   notifications/          Notifier (all notifications), NookMessagingService, CallActionReceiver
   feature/
     root/ splash/ onboarding/ auth/ lock/ shell/ chats/ chat/ friends/ stickers/ calls/ account/
-firebase/                 firestore.rules, database.rules.json, indexes, rules tests (emulator)
-worker/                   Cloudflare Worker (TypeScript): /notify /call /livekit-token /media/delete + cron
+firebase/                 firestore.rules, database.rules.json, indexes, Kotlin rules tests (standalone Gradle build)
+worker/                   Cloudflare Worker in Kotlin/JS (standalone Gradle build): /notify /call /livekit-token
+                          /media/delete + cron. commonMain = pure logic (tested on JVM), jsMain = runtime glue.
 ```
 
 ## Data model (Firestore) — keep in sync with `data/firebase/Mappers.kt` and `firebase/firestore.rules`
@@ -86,18 +87,21 @@ worker/                   Cloudflare Worker (TypeScript): /notify /call /livekit
   LazyColumns use stable keys + `animateItem()`.
 
 ## Coding conventions
+- **The repo is 100% Kotlin.** Don't add JavaScript/TypeScript; Node is only used to run the `firebase` and
+  `wrangler` CLIs through `npx`.
 - Kotlin official style, 4-space indent, trailing commas. One feature = Screen composable + ViewModel in `feature/<name>`.
 - UI state: immutable data classes / sealed interfaces exposed as `StateFlow`; collect with `collectAsStateWithLifecycle()`.
 - Every screen handles loading (skeleton), empty, error and offline (`OfflineBanner`).
 - Process-death safety: route args via type-safe routes, filters/queries in `SavedStateHandle`, drafts in `rememberSaveable`.
   Never persist passwords anywhere except the PBKDF2 hash.
 - Accessibility: `contentDescription` on icons that act, 48dp touch targets, merged semantics on rows.
-- New Firestore fields → update Mappers.kt, firestore.rules AND firebase/test. Run `npm test` in `firebase/`.
-- New Worker behaviour → `worker/src`, add a vitest in `worker/test`, run `npm run typecheck && npm test`.
+- New Firestore fields → update Mappers.kt, firestore.rules AND `firebase/src/test` (Kotlin, emulator REST).
+- New Worker behaviour → pure logic in `worker/src/commonMain` with a test in `worker/src/jvmTest`; runtime calls in
+  `worker/src/jsMain`. Keep `dynamic`/`js()` usage inside `Js.kt`.
 
 ## Checks to run
 ```
 ./gradlew assembleDebug lint testDebugUnitTest      # Android
-cd firebase && npm install && npm test              # rules (needs Java 21 for the emulators)
-cd worker && npm install && npm run typecheck && npm test
+./gradlew -p worker jvmTest bundle                  # Worker tests + compiled Worker
+npx firebase-tools emulators:exec --only firestore,database --project demo-nook "./gradlew -p firebase test"
 ```
