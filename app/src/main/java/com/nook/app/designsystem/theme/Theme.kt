@@ -8,6 +8,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 
 enum class ThemeMode { Dark, Light, System }
 
@@ -55,8 +58,13 @@ fun NookTheme(mode: ThemeMode = ThemeMode.Dark, content: @Composable () -> Unit)
         bodyMedium = type.bodySmall, labelLarge = type.button, labelMedium = type.label, labelSmall = type.caption,
     )
     val reduceMotion = rememberSystemReduceMotion()
+    // Nook's layout is designed at a fixed text scale: the system "font size" setting is ignored so
+    // cards, bubbles and headers keep their proportions on every phone.
+    val density = LocalDensity.current
+    val fixedDensity = remember(density.density) { Density(density.density, fontScale = 1f) }
 
     CompositionLocalProvider(
+        LocalDensity provides fixedDensity,
         LocalNookColors provides colors,
         LocalNookTypography provides type,
         LocalReduceMotion provides reduceMotion,

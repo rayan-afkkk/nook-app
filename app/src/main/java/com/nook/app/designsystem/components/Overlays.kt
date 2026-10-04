@@ -121,12 +121,12 @@ fun SettingsRow(
                 if (onClick != null) Modifier.pressScale(interaction, 0.98f).clickable(interaction, indication = null, role = Role.Button, onClick = onClick)
                 else Modifier,
             )
-            .padding(horizontal = Spacing.gutter, vertical = 12.dp),
+            .padding(horizontal = Spacing.gutter, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Spacing.md),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         Box(
-            Modifier.size(40.dp).clip(CircleShape).background(c.surfaceRaised),
+            Modifier.size(36.dp).clip(CircleShape).background(c.surfaceRaised),
             contentAlignment = Alignment.Center,
         ) { Icon(icon, null, tint = tint, modifier = Modifier.size(20.dp)) }
         Column(Modifier.weight(1f)) {

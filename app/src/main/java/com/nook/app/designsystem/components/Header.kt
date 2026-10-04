@@ -34,7 +34,7 @@ fun NookHeader(
 ) {
     Column(modifier.fillMaxWidth().statusBarsPadding()) {
         Row(
-            Modifier.fillMaxWidth().padding(start = Spacing.gutter, end = Spacing.sm, top = Spacing.lg, bottom = Spacing.xs),
+            Modifier.fillMaxWidth().padding(start = Spacing.gutter, end = Spacing.sm, top = Spacing.md, bottom = Spacing.xxs),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(Modifier.weight(1f)) {
@@ -67,7 +67,7 @@ fun NookTopBar(
 ) {
     Column(modifier.fillMaxWidth().statusBarsPadding()) {
         Row(
-            Modifier.fillMaxWidth().height(64.dp).padding(horizontal = Spacing.xxs),
+            Modifier.fillMaxWidth().height(58.dp).padding(horizontal = Spacing.xxs),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (onBack != null) {

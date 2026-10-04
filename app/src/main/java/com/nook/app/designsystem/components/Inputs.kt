@@ -85,13 +85,13 @@ fun NookTextField(
         interactionSource = interaction,
         modifier = modifier
             .fillMaxWidth()
-            .defaultMinSize(minHeight = 52.dp)
+            .defaultMinSize(minHeight = 48.dp)
             .clip(shape)
             .background(c.surface)
             .border(1.dp, borderColor, shape)
             .semantics { contentDescription = placeholder },
         decorationBox = { inner ->
-            Row(Modifier.padding(horizontal = 18.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 if (leadingIcon != null) {
                     Icon(leadingIcon, null, tint = c.textMuted, modifier = Modifier.size(20.dp))
                     Spacer(Modifier.width(10.dp))

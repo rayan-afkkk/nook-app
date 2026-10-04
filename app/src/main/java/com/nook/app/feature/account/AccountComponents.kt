@@ -82,7 +82,7 @@ fun ProfileHero(name: String, username: String, photoUrl: String?, onPhoto: () -
         ) {
             Box(
                 Modifier
-                    .size(112.dp)
+                    .size(96.dp)
                     .clip(CircleShape)
                     .background(Brush.sweepGradient(listOf(c.peach, c.accent, c.lavender, c.sky, c.peach)))
                     .padding(3.dp)
@@ -90,17 +90,17 @@ fun ProfileHero(name: String, username: String, photoUrl: String?, onPhoto: () -
                     .background(c.background)
                     .padding(4.dp),
             ) {
-                Avatar(photoUrl, name.ifBlank { "?" }, 98.dp, contentDescription = "Your profile photo")
+                Avatar(photoUrl, name.ifBlank { "?" }, 82.dp, contentDescription = "Your profile photo")
             }
             Box(
-                Modifier.align(Alignment.BottomEnd).size(34.dp).clip(CircleShape).background(c.text)
+                Modifier.align(Alignment.BottomEnd).size(30.dp).clip(CircleShape).background(c.text)
                     .border(3.dp, c.background, CircleShape),
                 contentAlignment = Alignment.Center,
             ) { Icon(Icons.Rounded.CameraAlt, null, tint = c.background, modifier = Modifier.size(16.dp)) }
         }
         Spacer(Modifier.height(Spacing.md))
-        Text(name, style = NookTheme.type.display, color = c.text, textAlign = TextAlign.Center)
-        Text("@$username", style = NookTheme.type.body, color = c.textMuted)
+        Text(name, style = NookTheme.type.headline, color = c.text, textAlign = TextAlign.Center)
+        Text("@$username", style = NookTheme.type.bodySmall, color = c.textMuted)
         Spacer(Modifier.height(Spacing.sm))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             NookPill("Member", background = c.mint, contentColor = Ink, bordered = false)
@@ -115,7 +115,7 @@ fun StatsRow(chats: Int, friends: Int, memberSince: Long, modifier: Modifier = M
     val c = NookTheme.colors
     val since = if (memberSince > 0) SimpleDateFormat("MMM ''yy", Locale.getDefault()).format(Date(memberSince)) else "—"
     Row(
-        modifier.fillMaxWidth().height(84.dp).clip(NookShapes.card).background(c.surface),
+        modifier.fillMaxWidth().height(70.dp).clip(NookShapes.card).background(c.surface),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Stat(chats.toString(), "Chats", Modifier.weight(1f))
@@ -129,7 +129,7 @@ fun StatsRow(chats: Int, friends: Int, memberSince: Long, modifier: Modifier = M
 @Composable
 private fun Stat(value: String, label: String, modifier: Modifier) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(value, style = NookTheme.type.title, color = NookTheme.colors.text)
+        Text(value, style = NookTheme.type.titleSans, color = NookTheme.colors.text)
         Text(label, style = NookTheme.type.caption, color = NookTheme.colors.textMuted)
     }
 }
@@ -144,20 +144,20 @@ fun DeviceCard(mediaBytes: Long, offlineBytes: Long, onClear: () -> Unit, modifi
             .glow(c.navy, 170.dp, 0.3f)
             .clip(NookShapes.card)
             .background(Brush.linearGradient(listOf(c.navy, Color(0xFF16293B))))
-            .padding(Spacing.lg),
+            .padding(Spacing.md),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(36.dp).clip(RoundedCornerShape(12.dp)).background(c.onNavy.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
+            Box(Modifier.size(34.dp).clip(RoundedCornerShape(12.dp)).background(c.onNavy.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
                 Icon(Icons.Outlined.PhoneAndroid, null, tint = c.onNavy, modifier = Modifier.size(20.dp))
             }
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
-                Text("This device", style = NookTheme.type.title, color = c.onNavy)
+                Text("This device", style = NookTheme.type.titleSans, color = c.onNavy)
                 Text("${formatBytes(mediaBytes + offlineBytes)} used", style = NookTheme.type.caption, color = c.onNavy.copy(alpha = 0.65f))
             }
             NookPill("Clear cache", background = c.onNavy, contentColor = c.navy, bordered = false, onClick = onClear)
         }
-        Spacer(Modifier.height(Spacing.lg))
+        Spacer(Modifier.height(Spacing.md))
         Bar("Media cache", mediaBytes, CacheRepository.MEDIA_CACHE_BUDGET, c.peach)
         Spacer(Modifier.height(Spacing.sm))
         Bar("Offline messages", offlineBytes, CacheRepository.OFFLINE_BUDGET, c.sky)
@@ -179,9 +179,9 @@ private fun Bar(label: String, bytes: Long, budget: Long, color: Color) {
 fun GroupTitle(text: String) {
     Text(
         text,
-        style = NookTheme.type.title,
-        color = NookTheme.colors.text,
-        modifier = Modifier.padding(start = Spacing.gutter, end = Spacing.gutter, top = Spacing.xl, bottom = Spacing.sm),
+        style = NookTheme.type.titleSans,
+        color = NookTheme.colors.textMuted,
+        modifier = Modifier.padding(start = Spacing.gutter + 4.dp, end = Spacing.gutter, top = Spacing.lg, bottom = Spacing.xs),
     )
 }
 
@@ -210,8 +210,8 @@ private fun ThemeTile(mode: ThemeMode, selected: Boolean, onClick: () -> Unit, m
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            Modifier.fillMaxWidth().height(96.dp).clip(RoundedCornerShape(18.dp))
-                .border(if (selected) 2.dp else 1.dp, ring, RoundedCornerShape(18.dp)),
+            Modifier.fillMaxWidth().height(80.dp).clip(RoundedCornerShape(16.dp))
+                .border(if (selected) 2.dp else 1.dp, ring, RoundedCornerShape(16.dp)),
         ) {
             when (mode) {
                 ThemeMode.Dark -> MiniScreen(NookPalette.Black, NookPalette.Charcoal, NookPalette.Cream, Modifier.fillMaxWidth())
@@ -260,7 +260,7 @@ fun SettingsGroup(content: @Composable ColumnScope.() -> Unit) {
 
 @Composable
 fun GroupDivider() {
-    Box(Modifier.padding(start = 68.dp, end = 16.dp).fillMaxWidth().height(1.dp).background(NookTheme.colors.border))
+    Box(Modifier.padding(start = 58.dp, end = 14.dp).fillMaxWidth().height(1.dp).background(NookTheme.colors.border))
 }
 
 /** Row with a colourful rounded icon tile, title, subtitle and chevron. */
@@ -282,13 +282,13 @@ fun TileRow(
             .fillMaxWidth()
             .pressScale(interaction, 0.98f)
             .clickable(interaction, indication = null, role = Role.Button, onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 14.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.size(38.dp).clip(RoundedCornerShape(12.dp)).background(tile), contentAlignment = Alignment.Center) {
-            Icon(icon, null, tint = iconTint, modifier = Modifier.size(20.dp))
+        Box(Modifier.size(32.dp).clip(RoundedCornerShape(10.dp)).background(tile), contentAlignment = Alignment.Center) {
+            Icon(icon, null, tint = iconTint, modifier = Modifier.size(17.dp))
         }
-        Spacer(Modifier.width(14.dp))
+        Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(title, style = NookTheme.type.bodyStrong, color = titleColor)
             if (subtitle != null) Text(subtitle, style = NookTheme.type.caption, color = c.textMuted)

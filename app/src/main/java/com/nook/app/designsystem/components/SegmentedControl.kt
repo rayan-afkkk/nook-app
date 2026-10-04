@@ -47,7 +47,7 @@ fun SegmentedControl(
     BoxWithConstraints(
         modifier
             .fillMaxWidth()
-            .height(44.dp)
+            .height(40.dp)
             .clip(NookShapes.pill)
             .background(c.surface)
             .padding(4.dp),

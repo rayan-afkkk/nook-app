@@ -70,13 +70,18 @@ worker/                   Cloudflare Worker in Kotlin/JS (standalone Gradle buil
   accent `#FF6A33`, amber `#E8B04B`, danger `#F26B5E`, pastels mint `#CDEFD9` sky `#D4E6FB` peach `#FBE3C0`
   lavender `#DDD0F5` rose `#F6C9C4`, navy `#1F3A52`. Light = same logic on cream `#F7F2EA`.
 - Always use `NookTheme.colors.*`, `NookTheme.type.*`, `Spacing.*`, `NookShapes.*` — never raw hex or Material defaults.
-- Type: Instrument Serif for titles (`display` 40sp, `hero`, `headline`, `title`), DM Sans for everything else.
-- Shape: 24dp cards with 1dp border, pills for buttons/segmented controls, hairline dividers, spacing 16/20/24.
+- Type: Instrument Serif for titles (`display` 34sp, `hero` 42, `headline` 26, `title` 21), DM Sans for everything else
+  (`body` 14.5, `bodySmall` 13, `label` 12, `caption` 11). Compact on purpose — don't scale it back up.
+- **Fixed text scale:** `NookTheme` provides a `Density` with `fontScale = 1f`, so the phone's font-size setting does
+  not change Nook's text or card sizes. Never read `LocalDensity` outside `NookTheme`, and always wrap new
+  windows/activities in `NookTheme`.
+- Shape: 20dp cards (16dp padding), pills for buttons/segmented controls, hairline dividers, spacing 16/20/24.
 - Icons: outline (`Icons.Outlined`) by default, filled/rounded when active.
 - Buttons: primary = cream→peach gradient pill with black text; secondary = charcoal; destructive = coral.
 - Empty states: `EmptyState` (outline icon, serif headline, one muted sentence); first-run `DashedAddCard`.
 - Screen headers: `NookHeader` (big serif title left, ≤2 icon buttons right, no hairline — spacing separates) or
   `NookTopBar` (with hairline) for pushed screens.
+- Sizes: buttons 50dp high, chat-list avatars 46dp, segmented controls 40dp, bottom bar 58dp.
 - Bottom bar: no pill/background behind the selected tab. Selected = filled icon + bold label in white (`colors.text`)
   with a small bounce; unselected = outline icon in muted.
 - Account/settings: centred profile hero (gradient ring), stats card, navy device card, theme preview tiles, and

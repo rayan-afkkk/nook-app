@@ -45,17 +45,17 @@ data class NookTypography(
 )
 
 val DefaultNookTypography = NookTypography(
-    display = TextStyle(fontFamily = InstrumentSerif, fontSize = 40.sp, lineHeight = 44.sp, letterSpacing = (-0.01).em),
-    hero = TextStyle(fontFamily = InstrumentSerif, fontSize = 48.sp, lineHeight = 50.sp, letterSpacing = (-0.015).em),
-    headline = TextStyle(fontFamily = InstrumentSerif, fontSize = 30.sp, lineHeight = 34.sp),
-    title = TextStyle(fontFamily = InstrumentSerif, fontSize = 24.sp, lineHeight = 28.sp),
-    titleSans = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.SemiBold, fontSize = 17.sp, lineHeight = 22.sp),
-    body = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Normal, fontSize = 16.sp, lineHeight = 22.sp),
-    bodyStrong = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Medium, fontSize = 16.sp, lineHeight = 22.sp),
-    bodySmall = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Normal, fontSize = 14.sp, lineHeight = 19.sp),
-    label = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Medium, fontSize = 13.sp, lineHeight = 16.sp, letterSpacing = 0.01.em),
-    caption = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Normal, fontSize = 12.sp, lineHeight = 15.sp),
-    button = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, lineHeight = 20.sp),
+    display = TextStyle(fontFamily = InstrumentSerif, fontSize = 34.sp, lineHeight = 38.sp, letterSpacing = (-0.01).em),
+    hero = TextStyle(fontFamily = InstrumentSerif, fontSize = 42.sp, lineHeight = 44.sp, letterSpacing = (-0.015).em),
+    headline = TextStyle(fontFamily = InstrumentSerif, fontSize = 26.sp, lineHeight = 30.sp),
+    title = TextStyle(fontFamily = InstrumentSerif, fontSize = 21.sp, lineHeight = 25.sp),
+    titleSans = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, lineHeight = 20.sp),
+    body = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Normal, fontSize = 14.5.sp, lineHeight = 20.sp),
+    bodyStrong = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Medium, fontSize = 14.5.sp, lineHeight = 20.sp),
+    bodySmall = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Normal, fontSize = 13.sp, lineHeight = 17.sp),
+    label = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Medium, fontSize = 12.sp, lineHeight = 15.sp, letterSpacing = 0.01.em),
+    caption = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 14.sp),
+    button = TextStyle(fontFamily = DmSans, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, lineHeight = 19.sp),
 )
 
 val LocalNookTypography = staticCompositionLocalOf { DefaultNookTypography }

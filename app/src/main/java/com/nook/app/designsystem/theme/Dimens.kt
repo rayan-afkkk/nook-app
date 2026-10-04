@@ -17,19 +17,19 @@ object Spacing {
 }
 
 object NookShapes {
-    val card = RoundedCornerShape(24.dp)
-    val cardSmall = RoundedCornerShape(18.dp)
+    val card = RoundedCornerShape(20.dp)
+    val cardSmall = RoundedCornerShape(16.dp)
     val pill = RoundedCornerShape(percent = 50)
     val sheet = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
-    val bubble = RoundedCornerShape(22.dp)
-    val tile = RoundedCornerShape(20.dp)
+    val bubble = RoundedCornerShape(20.dp)
+    val tile = RoundedCornerShape(18.dp)
 }
 
 object Sizes {
     val touch = 48.dp
-    val buttonHeight = 56.dp
+    val buttonHeight = 50.dp
     val hairline = 1.dp
     val avatarSm = 36.dp
-    val avatarMd = 52.dp
-    val avatarLg = 96.dp
+    val avatarMd = 46.dp
+    val avatarLg = 88.dp
 }

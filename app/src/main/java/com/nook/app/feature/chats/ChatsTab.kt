@@ -167,7 +167,7 @@ fun ChatRow(row: ChatRowUi, onClick: () -> Unit, modifier: Modifier = Modifier) 
             .pressScale(interaction, 0.98f)
             .drawBehind { if (pulse.value > 0f) drawRect(c.accent.copy(alpha = 0.14f * pulse.value)) }
             .clickable(interaction, indication = null, onClick = onClick)
-            .padding(horizontal = Spacing.gutter, vertical = 12.dp)
+            .padding(horizontal = Spacing.gutter, vertical = 10.dp)
             .semantics(mergeDescendants = true) {
                 contentDescription = buildString {
                     append(row.title); if (row.online) append(", online"); if (row.unread) append(", unread")
@@ -176,8 +176,8 @@ fun ChatRow(row: ChatRowUi, onClick: () -> Unit, modifier: Modifier = Modifier) 
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Avatar(row.photoUrl, row.title, 52.dp, online = row.online)
-        Spacer(Modifier.width(Spacing.md))
+        Avatar(row.photoUrl, row.title, 46.dp, online = row.online)
+        Spacer(Modifier.width(Spacing.sm))
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(

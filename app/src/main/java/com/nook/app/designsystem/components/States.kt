@@ -66,14 +66,14 @@ fun EmptyState(
     ) {
         Box(
             Modifier
-                .size(88.dp)
-                .breathingGlow(c.accent, 90.dp)
+                .size(76.dp)
+                .breathingGlow(c.accent, 80.dp)
                 .clip(CircleShape)
                 .border(1.dp, c.border, CircleShape)
                 .background(c.surface),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(icon, contentDescription = null, tint = c.text, modifier = Modifier.size(34.dp))
+            Icon(icon, contentDescription = null, tint = c.text, modifier = Modifier.size(30.dp))
         }
         Spacer(Modifier.height(Spacing.xl))
         Text(title, style = NookTheme.type.headline, color = c.text, textAlign = TextAlign.Center)
@@ -104,7 +104,7 @@ fun SkeletonList(rows: Int = 6, modifier: Modifier = Modifier) {
     Column(modifier.fillMaxWidth().padding(top = Spacing.xs)) {
         repeat(rows) {
             Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.gutter, vertical = Spacing.sm), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(52.dp).clip(CircleShape).shimmer())
+                Box(Modifier.size(46.dp).clip(CircleShape).shimmer())
                 Spacer(Modifier.width(Spacing.md))
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Box(Modifier.fillMaxWidth(0.5f).height(14.dp).clip(NookShapes.pill).shimmer())

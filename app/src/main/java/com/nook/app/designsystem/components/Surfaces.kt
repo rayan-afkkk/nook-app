@@ -47,7 +47,7 @@ fun NookCard(
     shape: Shape = NookShapes.card,
     bordered: Boolean = true,
     onClick: (() -> Unit)? = null,
-    contentPadding: androidx.compose.foundation.layout.PaddingValues = androidx.compose.foundation.layout.PaddingValues(Spacing.lg),
+    contentPadding: androidx.compose.foundation.layout.PaddingValues = androidx.compose.foundation.layout.PaddingValues(Spacing.md),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val interaction = remember { MutableInteractionSource() }
@@ -85,12 +85,12 @@ fun DashedAddCard(
             .drawBehind {
                 drawRoundRect(
                     color = c.border,
-                    cornerRadius = CornerRadius(24.dp.toPx()),
+                    cornerRadius = CornerRadius(20.dp.toPx()),
                     style = Stroke(width = 1.5.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 10f))),
                 )
             }
             .clickable(interaction, indication = null, role = Role.Button) { haptics.tap(); onClick() }
-            .padding(Spacing.lg),
+            .padding(Spacing.md),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {

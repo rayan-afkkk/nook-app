@@ -63,7 +63,7 @@ fun NookBottomBar(selectedIndex: Int, onSelect: (Int) -> Unit) {
     val c = NookTheme.colors
     Column(Modifier.fillMaxWidth().background(c.background)) {
         Hairline(color = c.border.copy(alpha = 0.6f))
-        Row(Modifier.fillMaxWidth().height(64.dp)) {
+        Row(Modifier.fillMaxWidth().height(58.dp)) {
             NookTab.entries.forEachIndexed { i, tab ->
                 TabItem(tab, selected = i == selectedIndex, onClick = { onSelect(i) }, modifier = Modifier.weight(1f))
             }
@@ -97,10 +97,10 @@ private fun TabItem(tab: NookTab, selected: Boolean, onClick: () -> Unit, modifi
                 if (sel) tab.filled else tab.outline,
                 contentDescription = null,
                 tint = tint,
-                modifier = Modifier.size(26.dp).graphicsLayer { scaleX = bounce.value; scaleY = bounce.value },
+                modifier = Modifier.size(23.dp).graphicsLayer { scaleX = bounce.value; scaleY = bounce.value },
             )
         }
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(3.dp))
         Text(
             tab.label,
             style = NookTheme.type.caption.copy(fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal),

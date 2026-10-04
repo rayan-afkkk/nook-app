@@ -215,7 +215,7 @@ fun MessageRow(
                 else Spacer(Modifier.width(28.dp))
                 Spacer(Modifier.width(8.dp))
             }
-            Column(horizontalAlignment = if (ui.mine) Alignment.End else Alignment.Start, modifier = Modifier.widthIn(max = 300.dp)) {
+            Column(horizontalAlignment = if (ui.mine) Alignment.End else Alignment.Start, modifier = Modifier.widthIn(max = 280.dp)) {
                 if (ui.showSender) {
                     Text(
                         ui.senderName ?: "",
@@ -288,7 +288,7 @@ fun nameColor(uid: String): Color {
 }
 
 fun bubbleShape(mine: Boolean, joinPrev: Boolean, joinNext: Boolean): Shape {
-    val big = 22.dp
+    val big = 20.dp
     val small = 6.dp
     return if (mine) {
         RoundedCornerShape(topStart = big, topEnd = if (joinPrev) small else big, bottomEnd = if (joinNext) small else small, bottomStart = big)
@@ -368,7 +368,7 @@ fun BubbleBody(ui: MessageUi, playback: PlaybackState, actions: BubbleActions?, 
                 m.text,
                 style = NookTheme.type.body,
                 color = contentColor,
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 6.dp),
+                modifier = Modifier.padding(start = 11.dp, end = 11.dp, top = 5.dp),
             )
         }
         MetaRow(ui, contentColor, overlay = isSticker)
