@@ -1,0 +1,21 @@
+{
+  "name": "nook-worker",
+  "private": true,
+  "type": "module",
+  "description": "Nook push notifications, LiveKit tokens and Cloudinary cleanup on Cloudflare Workers (free tier).",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "jose": "^6.2.12"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261004.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7",
+    "wrangler": "^4.147.0"
+  }
+}

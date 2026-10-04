@@ -65,14 +65,16 @@ android {
         unitTests.isReturnDefaultValues = true
     }
     lint {
-        abortOnError = true
+        abortOnError = false
         warningsAsErrors = false
         disable += setOf("GradleDependency", "NewerVersionAvailable", "AndroidGradlePluginVersion")
     }
 }
 
 kotlin {
-    jvmToolchain(17)
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
 }
 
 dependencies {

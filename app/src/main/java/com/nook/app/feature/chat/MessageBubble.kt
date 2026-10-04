@@ -51,6 +51,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -137,6 +138,8 @@ fun MessageRow(
     val threshold = with(density) { 56.dp.toPx() }
     val maxDrag = with(density) { 88.dp.toPx() }
     val holder = remember { CoordsHolder() }
+    // Gesture handlers are keyed on the id, so read the latest message/state through this.
+    val current by rememberUpdatedState(ui)
     val sendingAlpha by animateFloatAsState(if (m.status == SendStatus.SENDING) 0.72f else 1f, tween(250), label = "sendDim")
 
     Box(
@@ -162,7 +165,7 @@ fun MessageRow(
             .pointerInput(m.id) {
                 detectHorizontalDragGestures(
                     onDragEnd = {
-                        if (triggered) actions.onReply(m)
+                        if (triggered) actions.onReply(current.message)
                         triggered = false
                         scope.launch { drag.animateTo(0f, spring(dampingRatio = 0.45f, stiffness = 500f)) }
                     },
@@ -178,9 +181,9 @@ fun MessageRow(
             }
             .semantics {
                 customActions = listOf(
-                    CustomAccessibilityAction("Reply") { actions.onReply(m); true },
+                    CustomAccessibilityAction("Reply") { actions.onReply(current.message); true },
                     CustomAccessibilityAction("More options") {
-                        holder.coords?.let { actions.onLongPress(ui, it.boundsInRoot()) }; true
+                        holder.coords?.let { actions.onLongPress(current, it.boundsInRoot()) }; true
                     },
                 )
             },
@@ -234,12 +237,13 @@ fun MessageRow(
                                     onLongPress = {
                                         val coords = holder.coords ?: return@detectTapGestures
                                         haptics.longPress()
-                                        actions.onLongPress(ui, coords.boundsInRoot())
+                                        actions.onLongPress(current, coords.boundsInRoot())
                                     },
                                     onTap = {
+                                        val msg = current.message
                                         when {
-                                            m.status == SendStatus.FAILED -> actions.onRetry(m)
-                                            m.type == MessageType.IMAGE || m.type == MessageType.FILE || m.type == MessageType.GIF -> actions.onOpenMedia(m)
+                                            msg.status == SendStatus.FAILED -> actions.onRetry(msg)
+                                            msg.type == MessageType.IMAGE || msg.type == MessageType.FILE || msg.type == MessageType.GIF -> actions.onOpenMedia(msg)
                                         }
                                     },
                                 )

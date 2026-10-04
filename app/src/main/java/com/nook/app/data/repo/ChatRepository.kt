@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -43,7 +44,9 @@ class ChatRepository(
             .orderBy("lastMessageAt", Query.Direction.DESCENDING)
             .limit(200)
             .snapshots()
-            .map { snap -> snap.documents.mapNotNull { it.toChat() } }
+            .map<com.google.firebase.firestore.QuerySnapshot, List<Chat>?> { snap -> snap.documents.mapNotNull { it.toChat() } }
+            // A listener error (offline with no cache, missing index…) must never crash the shared scope.
+            .catch { e -> android.util.Log.w("Nook", "chat list listener failed: ${e.message}"); emit(emptyList()) }
     }.shareIn(scope, SharingStarted.WhileSubscribed(5_000), replay = 1)
 
     fun observeChat(chatId: String): Flow<Chat?> = chats.document(chatId).snapshots().map { it.toChat() }

@@ -130,27 +130,25 @@ class UserRepository(
         settingsRef().set(mapOf("disappearingDefault" to d.wire), SetOptions.merge()).await()
     }
 
-    // ---- FCM tokens (users/{uid}/tokens/{token}) ----
+    // ---- FCM tokens ----
+    // Stored as an array on the owner-only settings doc so the Worker needs ONE read per recipient.
 
     suspend fun saveFcmToken(token: String) {
         val uid = auth.uid ?: return
-        users.document(uid).collection(Fields.TOKENS).document(token)
-            .set(mapOf("token" to token, "platform" to "android", "updatedAt" to FieldValue.serverTimestamp())).await()
+        settingsRef(uid).set(mapOf("fcmTokens" to FieldValue.arrayUnion(token)), SetOptions.merge()).await()
     }
 
     suspend fun removeFcmToken(token: String) {
         val uid = auth.uid ?: return
-        runCatching { users.document(uid).collection(Fields.TOKENS).document(token).delete().await() }
+        runCatching { settingsRef(uid).set(mapOf("fcmTokens" to FieldValue.arrayRemove(token)), SetOptions.merge()).await() }
     }
 
-    /** Deletes profile, username claim, private settings and every device token. */
+    /** Deletes profile, username claim and private settings (which hold every device token). */
     suspend fun deleteAccountData() {
         val uid = auth.requireUid()
         val me = users.document(uid).get().await()
         val username = me.getString("username")
-        val tokens = users.document(uid).collection(Fields.TOKENS).get().await()
         val batch = db.batch()
-        tokens.documents.forEach { batch.delete(it.reference) }
         batch.delete(settingsRef(uid))
         if (username != null) batch.delete(db.collection(Fields.USERNAMES).document(username))
         batch.delete(users.document(uid))

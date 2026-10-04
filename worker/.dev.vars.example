@@ -1,0 +1,6 @@
+# Copy to .dev.vars for `npm run dev` (git-ignored). Never commit real values.
+FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"...","private_key":"-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n","client_email":"...@....iam.gserviceaccount.com"}
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+LIVEKIT_API_KEY=
+LIVEKIT_API_SECRET=
