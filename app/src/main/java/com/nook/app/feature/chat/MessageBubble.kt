@@ -308,7 +308,7 @@ fun BubbleBody(ui: MessageUi, playback: PlaybackState, actions: BubbleActions?, 
     val bg = when {
         isSticker -> Modifier
         ui.mine -> Modifier.background(c.mineBubbleBrush, shape)
-        else -> Modifier.background(c.bubbleTheirs, shape).border(1.dp, c.border, shape)
+        else -> Modifier.background(c.bubbleTheirs, shape).then(if (c.isDark) Modifier else Modifier.border(1.dp, c.border, shape))
     }
     Column(
         modifier

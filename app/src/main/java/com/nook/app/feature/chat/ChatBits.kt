@@ -49,7 +49,6 @@ fun TypingBubble(names: List<String>, modifier: Modifier = Modifier) {
     ) {
         Row(
             Modifier.clip(RoundedCornerShape(22.dp, 22.dp, 22.dp, 6.dp)).background(c.bubbleTheirs)
-                .border(1.dp, c.border, RoundedCornerShape(22.dp, 22.dp, 22.dp, 6.dp))
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             horizontalArrangement = Arrangement.spacedBy(5.dp),
         ) {
@@ -77,7 +76,7 @@ fun DateSeparator(label: String, modifier: Modifier = Modifier) {
             label,
             style = NookTheme.type.caption,
             color = c.textMuted,
-            modifier = Modifier.clip(CircleShape).background(c.surface).border(1.dp, c.border, CircleShape).padding(horizontal = 12.dp, vertical = 5.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
         )
     }
 }

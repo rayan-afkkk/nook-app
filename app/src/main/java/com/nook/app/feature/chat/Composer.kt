@@ -123,7 +123,7 @@ fun Composer(
         ) {
             NookIconButton(
                 Icons.Rounded.Add, "Attach", onAttach,
-                background = c.surface, bordered = true,
+                background = c.surface,
                 modifier = Modifier.graphicsLayer { rotationZ = attachRotation },
             )
             Spacer(Modifier.width(6.dp))
@@ -158,8 +158,7 @@ fun Composer(
 private fun TextPill(text: String, onTextChange: (String) -> Unit, onExpressions: () -> Unit) {
     val c = NookTheme.colors
     Row(
-        Modifier.fillMaxWidth().heightIn(min = 48.dp).clip(RoundedCornerShape(24.dp)).background(c.surface)
-            .border(1.dp, c.border, RoundedCornerShape(24.dp)),
+        Modifier.fillMaxWidth().heightIn(min = 48.dp).clip(RoundedCornerShape(24.dp)).background(c.surface),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(Modifier.weight(1f).padding(start = 18.dp, top = 12.dp, bottom = 12.dp)) {
@@ -258,7 +257,6 @@ private fun MicOrSend(
                     .then(if (recording) Modifier.glow(c.danger, 50.dp, 0.4f) else Modifier)
                     .clip(CircleShape)
                     .background(if (recording) c.danger else c.surface)
-                    .border(1.dp, if (recording) c.danger else c.border, CircleShape)
                     .semantics { contentDescription = "Hold to record a voice message"; role = Role.Button }
                     .pointerInput(Unit) {
                         awaitEachGesture {

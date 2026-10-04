@@ -29,12 +29,12 @@ fun NookHeader(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    showHairline: Boolean = true,
+    showHairline: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     Column(modifier.fillMaxWidth().statusBarsPadding()) {
         Row(
-            Modifier.fillMaxWidth().padding(start = Spacing.gutter, end = Spacing.sm, top = Spacing.md, bottom = Spacing.sm),
+            Modifier.fillMaxWidth().padding(start = Spacing.gutter, end = Spacing.sm, top = Spacing.lg, bottom = Spacing.xs),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(Modifier.weight(1f)) {

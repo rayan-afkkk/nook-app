@@ -4,11 +4,9 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,9 +14,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
@@ -44,13 +40,11 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nook.app.designsystem.components.Hairline
 import com.nook.app.designsystem.theme.NookMotion
-import com.nook.app.designsystem.theme.NookShapes
 import com.nook.app.designsystem.theme.NookTheme
-import kotlin.math.PI
-import kotlin.math.sin
 
 enum class NookTab(val label: String, val outline: ImageVector, val filled: ImageVector) {
     Chats("Chats", Icons.Outlined.ChatBubbleOutline, Icons.Rounded.ChatBubble),
@@ -60,30 +54,18 @@ enum class NookTab(val label: String, val outline: ImageVector, val filled: Imag
     Account("Account", Icons.Outlined.Person, Icons.Rounded.Person),
 }
 
-/** Bottom bar: the selection pill slides (and stretches mid-flight) to the new tab. */
+/**
+ * Bottom bar: no pill or background behind the selected tab — its icon switches to the filled
+ * version in the accent colour with a small bounce, and its label turns accent too.
+ */
 @Composable
-fun NookBottomBar(indicatorPosition: Float, selectedIndex: Int, onSelect: (Int) -> Unit) {
+fun NookBottomBar(selectedIndex: Int, onSelect: (Int) -> Unit) {
     val c = NookTheme.colors
     Column(Modifier.fillMaxWidth().background(c.background)) {
-        Hairline()
-        BoxWithConstraints(Modifier.fillMaxWidth().height(68.dp)) {
-            val itemWidth = maxWidth / NookTab.entries.size
-            val frac = indicatorPosition - indicatorPosition.toInt()
-            val stretch = 1f + 0.45f * sin(frac * PI).toFloat()
-            val pillWidth = 56.dp
-            Box(
-                Modifier
-                    .offset(x = itemWidth * indicatorPosition + (itemWidth - pillWidth) / 2, y = 8.dp)
-                    .graphicsLayer { scaleX = stretch }
-                    .width(pillWidth)
-                    .height(32.dp)
-                    .background(c.surfaceRaised, NookShapes.pill)
-                    .border(1.dp, c.border, NookShapes.pill),
-            )
-            Row(Modifier.fillMaxWidth().fillMaxHeight()) {
-                NookTab.entries.forEachIndexed { i, tab ->
-                    TabItem(tab, selected = i == selectedIndex, onClick = { onSelect(i) }, modifier = Modifier.weight(1f))
-                }
+        Hairline(color = c.border.copy(alpha = 0.6f))
+        Row(Modifier.fillMaxWidth().height(64.dp)) {
+            NookTab.entries.forEachIndexed { i, tab ->
+                TabItem(tab, selected = i == selectedIndex, onClick = { onSelect(i) }, modifier = Modifier.weight(1f))
             }
         }
         Spacer(Modifier.navigationBarsPadding())
@@ -94,11 +76,11 @@ fun NookBottomBar(indicatorPosition: Float, selectedIndex: Int, onSelect: (Int) 
 private fun TabItem(tab: NookTab, selected: Boolean, onClick: () -> Unit, modifier: Modifier) {
     val c = NookTheme.colors
     val reduce = NookTheme.reduceMotion
-    val tint by animateColorAsState(if (selected) c.text else c.textMuted, label = "tabTint")
+    val tint by animateColorAsState(if (selected) c.accent else c.textMuted, label = "tabTint")
     val bounce = remember { Animatable(1f) }
     LaunchedEffect(selected) {
         if (selected && !reduce) {
-            bounce.snapTo(0.7f)
+            bounce.snapTo(0.72f)
             bounce.animateTo(1f, NookMotion.bouncy())
         }
     }
@@ -108,17 +90,21 @@ private fun TabItem(tab: NookTab, selected: Boolean, onClick: () -> Unit, modifi
             .semantics { this.selected = selected; contentDescription = tab.label }
             .clickable(remember { MutableInteractionSource() }, indication = null, role = Role.Tab, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
-        Spacer(Modifier.height(12.dp))
         Crossfade(selected, label = "tabIcon") { sel ->
             Icon(
                 if (sel) tab.filled else tab.outline,
                 contentDescription = null,
                 tint = tint,
-                modifier = Modifier.size(24.dp).graphicsLayer { scaleX = bounce.value; scaleY = bounce.value },
+                modifier = Modifier.size(26.dp).graphicsLayer { scaleX = bounce.value; scaleY = bounce.value },
             )
         }
-        Spacer(Modifier.height(10.dp))
-        Text(tab.label, style = NookTheme.type.caption, color = tint)
+        Spacer(Modifier.height(4.dp))
+        Text(
+            tab.label,
+            style = NookTheme.type.caption.copy(fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal),
+            color = tint,
+        )
     }
 }

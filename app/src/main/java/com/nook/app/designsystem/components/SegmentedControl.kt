@@ -50,7 +50,6 @@ fun SegmentedControl(
             .height(44.dp)
             .clip(NookShapes.pill)
             .background(c.surface)
-            .border(1.dp, c.border, NookShapes.pill)
             .padding(4.dp),
     ) {
         val segment = maxWidth / options.size.coerceAtLeast(1)
@@ -61,12 +60,13 @@ fun SegmentedControl(
                 .width(segment)
                 .fillMaxHeight()
                 .clip(NookShapes.pill)
-                .background(c.primaryButton),
+                .background(if (c.isDark) c.surfaceRaised else c.background)
+                .border(1.dp, c.border, NookShapes.pill),
         )
         Row(Modifier.fillMaxSize()) {
             options.forEachIndexed { index, label ->
                 val selected = index == selectedIndex
-                val textColor by animateColorAsState(if (selected) c.onPrimaryButton else c.textMuted, label = "segText")
+                val textColor by animateColorAsState(if (selected) c.text else c.textMuted, label = "segText")
                 val interaction = remember { MutableInteractionSource() }
                 Box(
                     Modifier

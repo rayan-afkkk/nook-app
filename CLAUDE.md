@@ -75,7 +75,12 @@ worker/                   Cloudflare Worker in Kotlin/JS (standalone Gradle buil
 - Icons: outline (`Icons.Outlined`) by default, filled/rounded when active.
 - Buttons: primary = cream→peach gradient pill with black text; secondary = charcoal; destructive = coral.
 - Empty states: `EmptyState` (outline icon, serif headline, one muted sentence); first-run `DashedAddCard`.
-- Screen headers: `NookHeader` (big serif title left, ≤2 icon buttons right, hairline) or `NookTopBar` for pushed screens.
+- Screen headers: `NookHeader` (big serif title left, ≤2 icon buttons right, no hairline — spacing separates) or
+  `NookTopBar` (with hairline) for pushed screens.
+- Bottom bar: no pill/background behind the selected tab. Selected = filled icon + label in accent orange with a small
+  bounce; unselected = outline icon in muted.
+- Keep it clean: prefer filled surfaces over outlines (composer, segmented track, their bubbles in dark mode); use
+  borders only on cards and where contrast needs it (light theme).
 
 ## Animation rules
 - Springs from `NookMotion` (`standard`, `bouncy`, `gentle`), 200–400 ms feel. Animate via `graphicsLayer`

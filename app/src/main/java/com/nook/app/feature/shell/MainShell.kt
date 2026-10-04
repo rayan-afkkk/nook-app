@@ -120,7 +120,6 @@ fun MainShell(nav: NavHostController) {
             }
         }
         NookBottomBar(
-            indicatorPosition = indicator.value,
             selectedIndex = selected,
             onSelect = ::select,
         )
