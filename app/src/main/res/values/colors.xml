@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="nook_black">#FF000000</color>
+    <color name="nook_cream">#FFF5EFE6</color>
+    <color name="nook_orange">#FFFF6A33</color>
+    <color name="nook_charcoal">#FF1E1B18</color>
+</resources>

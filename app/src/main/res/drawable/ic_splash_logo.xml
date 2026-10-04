@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- The Nook mark: an arched doorway with a warm dot (matches NookLogo.kt). -->
+    <path
+        android:pathData="M36,76 L36,48 A18,18 0 0 1 72,48 L72,76"
+        android:strokeWidth="6"
+        android:strokeColor="#F5EFE6"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M54,62m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0"
+        android:fillColor="#FF6A33" />
+</vector>

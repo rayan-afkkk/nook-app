@@ -1,0 +1,32 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "presence": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['online', 'lastSeen']) && newData.child('online').isBoolean() && newData.child('lastSeen').isNumber()"
+      }
+    },
+    "chatMembers": {
+      "$chatId": {
+        ".read": "auth != null && data.child(auth.uid).exists()",
+        ".write": "auth != null && !data.exists() && newData.child(auth.uid).exists() && (!$chatId.beginsWith('dm_') || $chatId.contains(auth.uid))",
+        "$uid": {
+          ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (newData.exists() && root.child('chatMembers').child($chatId).child(auth.uid).exists()))",
+          ".validate": "newData.val() === true"
+        }
+      }
+    },
+    "typing": {
+      "$chatId": {
+        ".read": "auth != null && root.child('chatMembers').child($chatId).child(auth.uid).exists()",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid && root.child('chatMembers').child($chatId).child(auth.uid).exists()",
+          ".validate": "!newData.exists() || newData.isNumber()"
+        }
+      }
+    }
+  }
+}

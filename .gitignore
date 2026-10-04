@@ -1,0 +1,27 @@
+# Gradle / Android Studio
+.gradle/
+build/
+/captures
+.externalNativeBuild
+.cxx
+*.iml
+.idea/
+.DS_Store
+.kotlin/
+
+# Secrets — never commit
+local.properties
+app/google-services.json
+google-services.json
+*.keystore
+*.jks
+service-account*.json
+
+# Worker / rules tooling
+node_modules/
+worker/.wrangler/
+worker/.dev.vars
+firebase/*.log
+firebase-debug.log
+firestore-debug.log
+database-debug.log
