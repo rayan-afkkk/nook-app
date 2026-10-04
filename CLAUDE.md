@@ -77,8 +77,10 @@ worker/                   Cloudflare Worker in Kotlin/JS (standalone Gradle buil
 - Empty states: `EmptyState` (outline icon, serif headline, one muted sentence); first-run `DashedAddCard`.
 - Screen headers: `NookHeader` (big serif title left, ≤2 icon buttons right, no hairline — spacing separates) or
   `NookTopBar` (with hairline) for pushed screens.
-- Bottom bar: no pill/background behind the selected tab. Selected = filled icon + label in accent orange with a small
-  bounce; unselected = outline icon in muted.
+- Bottom bar: no pill/background behind the selected tab. Selected = filled icon + bold label in white (`colors.text`)
+  with a small bounce; unselected = outline icon in muted.
+- Account/settings: centred profile hero (gradient ring), stats card, navy device card, theme preview tiles, and
+  settings grouped in rounded cards with pastel icon tiles (`AccountComponents.kt`). Reuse these for new settings.
 - Keep it clean: prefer filled surfaces over outlines (composer, segmented track, their bubbles in dark mode); use
   borders only on cards and where contrast needs it (light theme).
 

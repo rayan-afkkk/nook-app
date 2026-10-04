@@ -56,7 +56,7 @@ enum class NookTab(val label: String, val outline: ImageVector, val filled: Imag
 
 /**
  * Bottom bar: no pill or background behind the selected tab — its icon switches to the filled
- * version in the accent colour with a small bounce, and its label turns accent too.
+ * version in white (cream) with a small bounce, and its label turns white and bold.
  */
 @Composable
 fun NookBottomBar(selectedIndex: Int, onSelect: (Int) -> Unit) {
@@ -76,7 +76,7 @@ fun NookBottomBar(selectedIndex: Int, onSelect: (Int) -> Unit) {
 private fun TabItem(tab: NookTab, selected: Boolean, onClick: () -> Unit, modifier: Modifier) {
     val c = NookTheme.colors
     val reduce = NookTheme.reduceMotion
-    val tint by animateColorAsState(if (selected) c.accent else c.textMuted, label = "tabTint")
+    val tint by animateColorAsState(if (selected) c.text else c.textMuted, label = "tabTint")
     val bounce = remember { Animatable(1f) }
     LaunchedEffect(selected) {
         if (selected && !reduce) {

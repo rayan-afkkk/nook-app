@@ -36,7 +36,15 @@ class AccountViewModel(
     private val worker: WorkerApi,
     private val auth: AuthRepository,
     private val signOutUseCase: SignOutUseCase,
+    people: com.nook.app.data.repo.PeopleRepository,
 ) : ViewModel() {
+    /** Little numbers for the profile header: chats, friends. */
+    val stats: StateFlow<Pair<Int, Int>> = kotlinx.coroutines.flow.combine(
+        chats.chatList.filterNotNull(),
+        people.contacts,
+    ) { list, contacts -> list.size to contacts.size }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0 to 0)
+
     val me: StateFlow<User?> = users.observeMe().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
     val privateSettings: StateFlow<PrivateSettings> = users.observePrivateSettings().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PrivateSettings())
     val theme: StateFlow<ThemeMode> = settings.theme.stateIn(viewModelScope, SharingStarted.Eagerly, ThemeMode.Dark)
