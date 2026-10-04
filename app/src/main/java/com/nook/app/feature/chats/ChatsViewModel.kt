@@ -67,9 +67,9 @@ class ChatsViewModel(
     private val rows: Flow<List<ChatRowUi>?> = combine(chats.chatList, users.observePrivateSettings()) { list, settings -> list to settings }
         .flatMapLatest { (list, settings) ->
             if (list == null) return@flatMapLatest flowOf(null)
-            val me = auth.uid ?: return@flatMapLatest flowOf(emptyList())
+            val me = auth.uid ?: return@flatMapLatest flowOf(emptyList<ChatRowUi>())
             val visible = list.filter { c -> c.isGroup || c.otherMember(me) !in settings.blocked }
-            if (visible.isEmpty()) flowOf(emptyList())
+            if (visible.isEmpty()) flowOf(emptyList<ChatRowUi>())
             else combine(visible.map { rowFlow(it, me) }) { it.toList() }
         }
 

@@ -54,7 +54,7 @@ class NewChatViewModel(
 
     val suggestions: StateFlow<List<User>> = combine(
         people.contacts,
-        if (addToChatId != null) chats.observeChat(addToChatId).map { it?.members.orEmpty().toSet() } else flowOf(emptySet()),
+        if (addToChatId != null) chats.observeChat(addToChatId).map { it?.members.orEmpty().toSet() } else flowOf(emptySet<String>()),
     ) { contacts, members -> contacts.map { it.user }.filter { it.uid !in members } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 

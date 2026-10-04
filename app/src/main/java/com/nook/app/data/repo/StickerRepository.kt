@@ -25,7 +25,7 @@ class StickerRepository(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun myPacks(): Flow<List<StickerPack>> = auth.authState.flatMapLatest { u ->
-        if (u == null) flowOf(emptyList())
+        if (u == null) flowOf(emptyList<StickerPack>())
         else packs.whereArrayContains("members", u.uid).limit(50).snapshots()
             .map { s -> s.documents.mapNotNull { it.toStickerPack() } }
             .catch { emit(emptyList()) }

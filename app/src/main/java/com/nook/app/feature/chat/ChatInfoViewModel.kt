@@ -52,7 +52,7 @@ class ChatInfoViewModel(
     private val chatFlow = chats.observeChat(chatId)
 
     private val members = chatFlow.filterNotNull().flatMapLatest { chat ->
-        if (chat.members.isEmpty()) flowOf(emptyList())
+        if (chat.members.isEmpty()) flowOf(emptyList<MemberUi>())
         else combine(chat.members.map { uid ->
             combine(users.observeUser(uid), realtime.observePresence(uid)) { u, p ->
                 u?.let { MemberUi(it, p, uid in chat.admins, uid == me) }

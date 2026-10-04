@@ -56,7 +56,7 @@ class CallRepository(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun history(): Flow<List<Call>> = auth.authState.flatMapLatest { u ->
-        if (u == null) flowOf(emptyList())
+        if (u == null) flowOf(emptyList<Call>())
         else calls.whereArrayContains("members", u.uid)
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .limit(50)

@@ -39,7 +39,7 @@ class ChatRepository(
     /** null = loading. Shared so Chats + Friends tabs reuse ONE listener. */
     @OptIn(ExperimentalCoroutinesApi::class)
     val chatList: Flow<List<Chat>?> = auth.authState.flatMapLatest { user ->
-        if (user == null) flowOf(emptyList())
+        if (user == null) flowOf(emptyList<Chat>())
         else chats.whereArrayContains("members", user.uid)
             .orderBy("lastMessageAt", Query.Direction.DESCENDING)
             .limit(200)

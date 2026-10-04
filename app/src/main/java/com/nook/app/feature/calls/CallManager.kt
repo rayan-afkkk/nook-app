@@ -67,7 +67,7 @@ class CallManager(
     val state: StateFlow<ActiveCall?> = _state.asStateFlow()
 
     private var room: Room? = null
-    private var jobs = mutableListOf<Job>()
+    private val jobs = mutableListOf<Job>()
 
     fun startCall(chatId: String, peerUid: String, type: CallType) {
         if (_state.value != null) return
@@ -240,7 +240,7 @@ class CallManager(
         if (_state.value?.phase == CallPhase.Ended) return
         _state.update { it?.copy(phase = CallPhase.Ended, message = msg, remoteVideo = null, localVideo = null) }
         jobs.forEach { it.cancel() }
-        jobs = mutableListOf()
+        jobs.clear()
         room?.let { r -> runCatching { r.disconnect() }; runCatching { r.release() } }
         room = null
         stopService()

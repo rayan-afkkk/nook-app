@@ -23,15 +23,20 @@ import kotlinx.coroutines.tasks.await
  *  chatMembers/{chatId}/{uid} true  (mirror of Firestore members, used by RTDB rules)
  */
 class RealtimeRepository(
-    private val rtdb: FirebaseDatabase,
+    rtdbProvider: () -> FirebaseDatabase,
     private val auth: AuthRepository,
 ) {
+    /** null when google-services.json has no database URL — presence/typing then quietly turn off. */
+    private val db: FirebaseDatabase? by lazy {
+        runCatching(rtdbProvider).onFailure { android.util.Log.w("Nook", "Realtime Database unavailable: ${it.message}") }.getOrNull()
+    }
     private var connectedListener: ValueEventListener? = null
     private var serverOffset = 0L
     private val typingRefs = mutableSetOf<DatabaseReference>()
 
     fun goOnline() {
         val uid = auth.uid ?: return
+        val rtdb = db ?: return
         rtdb.goOnline()
         if (connectedListener != null) return
         val me = rtdb.getReference("presence/$uid")
@@ -54,6 +59,7 @@ class RealtimeRepository(
 
     /** Background / sign-out: mark offline explicitly, then drop the socket (onDisconnect is the safety net). */
     fun goOffline() {
+        val rtdb = db ?: return
         connectedListener?.let { rtdb.getReference(".info/connected").removeEventListener(it) }
         connectedListener = null
         typingRefs.forEach { it.removeValue() }
@@ -66,6 +72,7 @@ class RealtimeRepository(
     }
 
     fun observePresence(uid: String): Flow<Presence> = callbackFlow {
+        val rtdb = db ?: run { trySend(Presence()); awaitClose { }; return@callbackFlow }
         val ref = rtdb.getReference("presence/$uid")
         val l = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -82,6 +89,7 @@ class RealtimeRepository(
     /** Caller throttles (ChatViewModel writes at most every 3 s). */
     fun setTyping(chatId: String, typing: Boolean) {
         val uid = auth.uid ?: return
+        val rtdb = db ?: return
         val ref = rtdb.getReference("typing/$chatId/$uid")
         if (typing) {
             ref.onDisconnect().removeValue()
@@ -96,6 +104,7 @@ class RealtimeRepository(
     /** uids currently typing in [chatId], excluding me; stale entries (>8 s) are ignored. */
     fun observeTyping(chatId: String): Flow<Set<String>> = callbackFlow {
         val me = auth.uid
+        val rtdb = db ?: run { trySend(emptySet()); awaitClose { }; return@callbackFlow }
         val ref = rtdb.getReference("typing/$chatId")
         val l = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -114,10 +123,12 @@ class RealtimeRepository(
 
     suspend fun addMembers(chatId: String, uids: Collection<String>) {
         if (uids.isEmpty()) return
+        val rtdb = db ?: return
         rtdb.getReference("chatMembers/$chatId").updateChildren(uids.associateWith { true }).await()
     }
 
     suspend fun removeMember(chatId: String, uid: String) {
+        val rtdb = db ?: return
         rtdb.getReference("chatMembers/$chatId/$uid").removeValue().await()
     }
 }

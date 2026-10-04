@@ -21,9 +21,9 @@ class PeopleRepository(
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     val contacts: Flow<List<Contact>> = chats.chatList.filterNotNull().flatMapLatest { list ->
-        val me = auth.uid ?: return@flatMapLatest flowOf(emptyList())
+        val me = auth.uid ?: return@flatMapLatest flowOf(emptyList<Contact>())
         val dms = list.filter { !it.isGroup }.mapNotNull { chat -> chat.otherMember(me)?.let { it to chat } }
-        if (dms.isEmpty()) flowOf(emptyList())
+        if (dms.isEmpty()) flowOf(emptyList<Contact>())
         else combine(dms.map { (uid, chat) -> contactFlow(uid, chat) }) { arr -> arr.filterNotNull().sortedByDescending { it.lastMessageAt } }
     }
 

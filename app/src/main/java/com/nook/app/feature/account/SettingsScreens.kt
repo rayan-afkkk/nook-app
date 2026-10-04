@@ -160,7 +160,7 @@ fun AppLockSettingsScreen(nav: NavHostController) {
 @OptIn(ExperimentalCoroutinesApi::class)
 class BlockedUsersViewModel(private val users: UserRepository) : ViewModel() {
     val blocked: StateFlow<List<User>?> = users.observePrivateSettings().flatMapLatest { s ->
-        if (s.blocked.isEmpty()) flowOf(emptyList())
+        if (s.blocked.isEmpty()) flowOf(emptyList<User>())
         else combine(s.blocked.map { users.observeUser(it) }) { arr -> arr.filterNotNull() }
     }.map<List<User>, List<User>?> { it }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 

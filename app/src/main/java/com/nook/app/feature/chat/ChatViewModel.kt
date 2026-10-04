@@ -139,7 +139,7 @@ class ChatViewModel(
     private val memberUsers: Flow<Map<String, User>> = chatFlow.filterNotNull()
         .map { it.members.sorted() }
         .flatMapLatest { ids ->
-            if (ids.isEmpty()) flowOf(emptyMap())
+            if (ids.isEmpty()) flowOf(emptyMap<String, User>())
             else combine(ids.map { users.observeUser(it) }) { arr -> arr.filterNotNull().associateBy { it.uid } }
         }
 

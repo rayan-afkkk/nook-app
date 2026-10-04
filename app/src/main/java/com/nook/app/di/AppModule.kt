@@ -72,7 +72,6 @@ val appModule = module {
     // Firebase
     single { FirebaseAuth.getInstance() }
     single { FirebaseFirestore.getInstance() }
-    single { FirebaseDatabase.getInstance() }
 
     // Local
     single { SettingsStore(androidContext()) }
@@ -94,7 +93,7 @@ val appModule = module {
     // Repositories
     single { AuthRepository(get()) }
     single { UserRepository(get(), get(), get()) }
-    single { RealtimeRepository(get(), get()) }
+    single { RealtimeRepository({ FirebaseDatabase.getInstance() }, get()) }
     single { ChatRepository(get(), get(), get(), get(), get()) }
     single { MessageRepository(get(), get(), get(), get()) }
     single { MediaRepository(androidContext(), get()) }
